@@ -1,0 +1,122 @@
+<div class="ui-g">
+    <div class="ui-g-3">
+        <p-panel>
+            <p-header>
+                <h5>Cведения о заказчике</h5>
+            </p-header>
+            <div class="ui-fluid">
+                <div class="ui-fluid">
+                    <label for="newOrderClient">Клиент</label>
+                    <input type="text" id="newOrderClient" [(ngModel)]="newOrder.client" pInputText>
+                </div>
+                <div class="ui-fluid padding-top">
+                    <label for="newOrderDate">Дата</label>
+                    <p-calendar id="newOrderDate" [inline]="false" dateFormat="dd.mm.yy" [(ngModel)]="newOrder.date">
+                    </p-calendar>
+                </div>
+                <div class="ui-fluid padding-top">
+                    <label for="newOrderAddress">Адрес</label>
+                    <input type="text" id="newOrderAddress" [(ngModel)]="newOrder.address" pInputText>
+                </div>
+            </div>
+            <p-footer>
+                <button pButton class="ui-button-raised ui-button-success"  style="margin-right: .5em" icon="pi pi-save"
+                        label="Сохранить" (click)="addOrder()"></button>
+                <p-button class="ui-button-warning" icon="pi pi-exclamation-triangle" style="margin-right: .5em" label="Очистить"
+                          (click)="clearAddForm()"></p-button>
+            </p-footer>
+        </p-panel>
+        <!--<div style="padding-top: 1em">-->
+            <!--<input pInputText pKeyFilter="num" type="text" placeholder="id заказа" style="margin-right: .5em">-->
+            <!--<p-button label="Поиск" style="margin-right: .5em"></p-button>-->
+            <!--<p-button class="btn-margin-left" style="margin-right: .5em" icon="pi pi-refresh" label="Обновить" (click)="loadOrders()"></p-button>-->
+        <!--</div>-->
+    </div>
+
+    <div class="ui-g-9">
+        <p-pickList [source]="sourceGoods" [target]="targetGoods" [responsive]="true" filterBy="name"
+                    targetFilterPlaceholder="Поиск по названию" sourceFilterPlaceholder="Поиск по названию"
+                    [showSourceControls]="false" [showTargetControls]="false"
+                    sourceHeader="Каталог товаров" targetHeader="Выбрано"
+                    [sourceStyle]="{ 'height':'300px' }" [targetStyle]="{ 'height':'300px' }">
+            <ng-template let-g pTemplate="item">
+                <div class="ui-helper-clearfix">
+                    <div class="ui-g">
+                        <div class="ui-g-1" style="border-right: solid 1px #4e555b">
+                            <span class="pi-list-title">Id:</span>
+                            <span class="pi-list-value">
+                        <b>{{ g.id }}</b>
+                    </span>
+                        </div>
+                        <div class="ui-g-8">
+                            <!--<span class="pi-list-title">Название:</span>-->
+                            <span class="pi-list-value">
+                        <b>{{ g.name }}</b>
+                    </span>
+                        </div>
+                        <div class="ui-g-3" style="border-left: solid 1px #4e555b">
+                            <span class="pi-list-title">Цена:</span>
+                            <span class="pi-list-value">
+                        <b>{{ g.price }} ₽</b>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-pickList>
+    </div>
+</div>
+
+<div style="padding-bottom: 1em">
+    <input pInputText pKeyFilter="num" type="text" placeholder="id заказа" style="margin-right: .5em" [(ngModel)]="searchId">
+    <p-button label="Поиск" style="margin-right: .5em" (click)="onSearchOrder(searchId)"></p-button>
+    <p-button class="btn-margin-left" style="margin-right: .5em" icon="pi pi-refresh" label="Обновить" (click)="loadOrders()"></p-button>
+</div>
+
+<p-table [value]="orders">
+    <ng-template pTemplate="header">
+        <tr>
+            <th colspan="4" style="text-align: center">Заказчик</th>
+            <th colspan="3" style="text-align: center">Товар</th>
+            <th rowspan="2" style="width:8em"></th>
+        </tr>
+        <tr>
+            <th>Id</th>
+            <th>Название</th>
+            <th>Дата</th>
+            <th>Адрес</th>
+            <th>Id</th>
+            <th>Название</th>
+            <th>Цена, ₽</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order let-ri="rowIndex">
+        <ng-container>
+            <tr>
+                <td [attr.rowspan]="order.goods.length">{{order.id}}</td>
+                <td [attr.rowspan]="order.goods.length">{{order.client}}</td>
+                <td [attr.rowspan]="order.goods.length">{{order.date | date:'dd.MM.yyyy'}}</td>
+                <td [attr.rowspan]="order.goods.length">{{order.address}}</td>
+                <td>{{ order.goods[0].id || '-'}}</td>
+                <td>{{ order.goods[0].name || '-'}}</td>
+                <td>{{ order.goods[0].price || '-' }}</td>
+                <td [attr.rowspan]="order.goods.length" style="vertical-align: top">
+                    <button pButton type="button" icon="pi pi-pencil" class="ui-button-info" style="margin-right: .5em"
+                            [disabled]="editBtnDisable" (click)="selectToEdit(order)"></button>
+                    <button pButton type="button" icon="pi pi-fw pi-trash" class="ui-button-danger"
+                            [disabled]="editBtnDisable" (click)="onRowDeleteInit()"></button>
+                </td>
+            </tr>
+            <ng-container *ngFor="let goods of order.goods; let i = index">
+                <tr *ngIf="i > 0">
+                    <td>{{ goods.id }}</td>
+                    <td>{{ goods.name }}</td>
+                    <td>{{ goods.price }}</td>
+                </tr>
+            </ng-container>
+        </ng-container>
+    </ng-template>
+</p-table>
+<p-toast [style]="{marginTop: '80px'}"></p-toast>
+<p-confirmDialog class="ui-confirmdialog" icon="pi pi-exclamation-triangle" header="Подтверждение"
+                 acceptLabel="Да" rejectLabel="Нет"></p-confirmDialog>

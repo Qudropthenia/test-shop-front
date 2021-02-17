@@ -1,0 +1,99 @@
+<div class="ui-g">
+    <p-panel class="ui-g-6">
+        <p-header>
+            <h5>Добавление</h5>
+        </p-header>
+        <div class="ui-g ui-fluid">
+            <div class="ui-md-6 ui-fluid">
+                <label for="newGoodsName">Наименование</label>
+                <input type="text" id="newGoodsName" [(ngModel)]="newGoods.name" pInputText>
+            </div>
+            <div class="ui-md-6 ui-fluid">
+                <label for="newGoodsPrice">Цена</label>
+                <input type="text" id="newGoodsPrice" [(ngModel)]="newGoods.price" pInputText pKeyFilter="money">
+            </div>
+        </div>
+        <button pButton icon="pi pi-save" label=" Сохранить" id="saveBTN"
+                class="ui-button-raised ui-button-success btn-margin-left" [disabled]="saveBtnDisable"
+                (click)="addGoods()"></button>
+    </p-panel>
+
+    <p-panel class="ui-g-6">
+        <p-header>
+            <h5>Параметры поиска</h5>
+        </p-header>
+        <div class="ui-g ui-fluid">
+            <div class="ui-md-3 ui-fluid">
+                <!--<label for="searchGoodsId">Id</label>-->
+                <!--<input type="text" id="searchGoodsId" [(ngModel)]="searchData.id" pInputText>-->
+                <div class="ui-g-12">
+                    <p-radioButton name="group" value="Id" label="Id" inputId="id"
+                                   [(ngModel)]="radioSelect"></p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton name="group" value="Наименование" label="Наименование" inputId="name"
+                                   [(ngModel)]="radioSelect"></p-radioButton>
+                </div>
+            </div>
+            <div class="ui-md-9 ui-fluid">
+                <label for="searchGoodsName">{{ radioSelect }}</label>
+                <input type="text" id="searchGoodsName" [(ngModel)]="searchData" pInputText>
+            </div>
+        </div>
+        <button pButton icon="pi pi-search" label="Поиск" class="ui-button-raised btn-margin-left" (click)="findGoodsByIdName()">
+        </button>
+    </p-panel>
+
+    <p-button class="btn-margin-left" icon="pi pi-refresh" label="Обновить" (click)="uploadGoods()"></p-button>
+    <p-table class="ui-g-12" [columns]="tableCols" [value]="goods" selectionMode="single" dataKey="id" editMode="row">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" pSortableColumn="{{ col.field }}">{{ col.header }}
+                    <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                </th>
+                <th style="width:8em"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-columns="columns" let-rowData let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="rowData">
+                <td>{{ rowData.id }}</td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="rowData.name" required>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ rowData.name }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input type="text" [(ngModel)]="rowData.price" pInputText pKeyFilter="money" required>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ rowData.price }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td *ngIf="!editing" style="margin: 0; padding: 0;"  style="text-align:center">
+                    <button pButton type="button" pInitEditableRow icon="pi pi-pencil"
+                            class="ui-button-info" style="margin-right: .5em" [disabled]="editBtnDisable"
+                            (click)="onRowEditInit(rowData)"></button>
+                    <button type="button" class="ui-button-danger" pButton pRipple icon="pi pi-fw pi-trash"
+                            [disabled]="editBtnDisable" (click)="onRowDeleteInit(ri)"></button>
+                </td>
+                <td *ngIf="editing" style="margin: 0; padding: 0"  style="text-align:center">
+                    <button pButton type="button" pSaveEditableRow icon="pi pi-check" class="ui-button-success"
+                            style="margin-right: .5em" (click)="onRowEditSave(rowData)"></button>
+                    <button pButton type="button" pCancelEditableRow icon="pi pi-times" class="ui-button-danger"
+                            (click)="onRowEditCancel(ri)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-toast [style]="{marginTop: '80px'}"></p-toast>
+<p-confirmDialog class="ui-confirmdialog" icon="pi pi-exclamation-triangle" header="Подтверждение"
+                 acceptLabel="Да" rejectLabel="Нет"></p-confirmDialog>

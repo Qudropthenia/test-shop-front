@@ -1,0 +1,11 @@
+.c-button {
+    /* другие стили */
+    /*display: inline-flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    margin: 0;
+    padding: 0;
+}
+.btn-margin-left {
+    margin-left: 7px;
+}
