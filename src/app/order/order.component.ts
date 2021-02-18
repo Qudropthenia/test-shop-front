@@ -134,6 +134,13 @@ export class OrderComponent implements OnInit {
     this.httpApi.get(url, new HttpParams({ fromString: `id:${id}` }))
         .subscribe({
           next: value => {
+            this.orders = this.orders.filter((order) => order.id !== id);
+            if (this.newOrder.id === id) {
+              this.clearAddForm();
+            }
+            if (this.newOrder.id === id) {
+              this.clearAddForm();
+            }
             this.messageService.add({
               severity: 'success',
               summary: 'Удаление информации о заказе',

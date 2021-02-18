@@ -104,7 +104,7 @@
                     <button pButton type="button" icon="pi pi-pencil" class="ui-button-info" style="margin-right: .5em"
                             [disabled]="editBtnDisable" (click)="selectToEdit(order)"></button>
                     <button pButton type="button" icon="pi pi-fw pi-trash" class="ui-button-danger"
-                            [disabled]="editBtnDisable" (click)="onRowDeleteInit()"></button>
+                            [disabled]="editBtnDisable" (click)="onRowDeleteInit(order.id)"></button>
                 </td>
             </tr>
             <ng-container *ngFor="let goods of order.goods; let i = index">
