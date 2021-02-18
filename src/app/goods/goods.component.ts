@@ -11,7 +11,7 @@ import { HttpParams } from '@angular/common/http';
   styleUrls: ['./goods.component.css']
 })
 export class GoodsComponent implements OnInit {
-  private SERVICE_PATH = 'spring-data';
+  private SERVICE_PATH: 'spring-data' | 'criteria-api' = 'criteria-api';
   private regexPrice: RegExp = /^\d+(?:[.,]\d{1,2})?$/;
   tableCols: any[];
 
